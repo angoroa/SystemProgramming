@@ -66,8 +66,13 @@ int main() {
             // 부모 프로세스 (= 프로세스 1)
             close(fd1[0]);
             close(fd2[1]);
-            while(fgets(buf, sizeof(buf), stdin) != NULL){
-                buf[strcspn(buf, "\n")] = '\0';
+            while(1){
+		printf("디렉터리 명을 입력하시오: ");
+		if (fgets(buf, sizeof(buf), stdin) == NULL){
+			perror("입력에러");
+			break;
+		}	
+	    	buf[strcspn(buf, "\n")] = '\0';
                 
                 if (strcmp(buf, "//")==0){
                     write(fd1[1], buf, strlen(buf)+1);
@@ -79,7 +84,7 @@ int main() {
             wait(NULL);
             read(fd2[0], &count, sizeof(count));
             close(fd2[0]);
-            printf("최종 파일 개수 : %d", count);
+            printf("최종 파일 개수 : %d\n", count);
             break;
         }
  }
